@@ -39,7 +39,10 @@ fn main() {
 	// accept connections and process them, spawning a new tasks for each one
 	for stream in acceptor.incoming() {
 	    match stream {
-	        Err(e) => { /* connection failed */ }
+	        Err(e) => {
+	        	/* connection failed */
+	        	let _ = e; // discard result
+	        }
 	        Ok(stream) => spawn(proc() {
 	            // connection succeeded
 	            handle_client(stream)
