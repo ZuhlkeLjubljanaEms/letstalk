@@ -18,14 +18,8 @@ pub struct FriendInfo  {
     friend_last_ip_address: String,
 }
 
-static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
 
-fn main() {
-    write_dummy_json_to_file(FRIEND_LIST_FILENAME);
-    let mut stored_friend_info: Vec<FriendInfo> = read_friends_from_file(FRIEND_LIST_FILENAME);
-}
-
-fn write_dummy_json_to_file(filename: &str) {
+pub fn write_dummy_json_to_file(filename: &str) {
     let will_friend_info = FriendInfo {
         friend_nickname: "Will43".to_string(),
         friend_last_ip_address: "192.168.20.151".to_string(),
@@ -45,7 +39,7 @@ fn write_dummy_json_to_file(filename: &str) {
     let _ = friend_list_file.write_line(encoded_friend_info.as_slice());
 }
 
-fn read_friends_from_file(filename: &str) -> (Vec<FriendInfo>) {
+pub fn read_friends_from_file(filename: &str) -> (Vec<FriendInfo>) {
 
     let path = Path::new(filename);
     let mut file = BufferedReader::new(File::open(&path));
