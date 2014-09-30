@@ -10,7 +10,6 @@
 extern crate serialize;
 use serialize::json;
 use std::io::{File, Open, Write, BufferedReader};
-use std::from_str::from_str;
 
 
 
@@ -53,24 +52,17 @@ fn read_friends_from_file(filename: &str) -> () {
     let path = Path::new(filename);
     let mut file = BufferedReader::new(File::open(&path));
     
+    let mut friend_info_collection: Vec<FriendInfo> = Vec::new();
     for line_iter in file.lines() {
         let line : String = match line_iter { Ok(x) => x, Err(e) => fail!(e) };
         // Deserialize using `json::decode`
         let decoded: FriendInfo = json::decode(line.as_slice()).unwrap();
-        println!("read data: {} decoded from {}", decoded.friend_nickname, line);
+        //println!("read data: {} decoded from {}", decoded.friend_nickname, line);
+        friend_info_collection.push(decoded);
     }
+    //for n in range(0u, friend_info_collection.len()) {
+    //    println!("Vector contains: {}", friend_info_collection.get(n).friend_nickname);
+    //}
 }
-
-#[allow(dead_code)]
-fn parse_str<T: std::from_str::FromStr>(s: &str) -> T {
-    let val = match from_str::<T>(s) {
-        Some(x) => x,
-        None    => fail!("string to number parse error")
-    };
-    val
-}
-
-
-
 
 
