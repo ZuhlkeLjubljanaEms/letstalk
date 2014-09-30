@@ -1,29 +1,9 @@
 extern crate core;
-//extern crate bindings;
 
-extern crate libc;//::funcs::bsd43::getifaddrs
 
 use std::io::{TcpListener, TcpStream};
 use std::io::{Acceptor, Listener};
 
-
-//use std::io::net::ip::{IpAddr, Ipv4Addr};
-//use std::os;
-//
-//use pnet::packet::{Packet};
-//use pnet::packet::ethernet::{EthernetHeader, EthernetPacket, EtherTypes};
-//use pnet::packet::ip::{IpNextHeaderProtocol, IpNextHeaderProtocols};
-//use pnet::packet::ipv4::{Ipv4Header, Ipv4Packet};
-//use pnet::packet::ipv6::{Ipv6Header, Ipv6Packet};
-//use pnet::packet::udp::{UdpHeader, UdpPacket};
-//
-//use pnet::datalink::{datalink_channel, Layer2};
-//
-//use pnet::util::get_network_interfaces;
-
-//use bindings::libc;
-
-//use libc::{ifaddrs};
 
 fn main() {
 
