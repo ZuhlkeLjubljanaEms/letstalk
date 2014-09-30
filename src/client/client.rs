@@ -10,13 +10,6 @@ fn main() {
 	let addr = args[1].as_slice();
 
 	let mut socket = TcpStream::connect(addr, 7777).unwrap();
-	
-//	let s = args[2].clone();
-//	let buf = s.into_bytes();
-//	socket.write(buf.as_slice());
-	
-//	let s = args[2].clone();
-//	let buf = s.into_bytes();
 	socket.write(args[2].clone().into_bytes().as_slice());
 	
 	
