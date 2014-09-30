@@ -1,0 +1,9 @@
+handle_client
+read:Ok(1) - sz:1
+byte:65
+read:Ok(1) - sz:1
+byte:66
+read:Ok(1) - sz:1
+byte:67
+read:Err(end of file) - sz:1
+... disconnect

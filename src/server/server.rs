@@ -15,22 +15,29 @@ fn main() {
 	fn handle_client(mut stream: TcpStream) {
 		println!("handle_client");
 		
-		let mut buf = [0];
+		let mut buf: [u8,..1000]=[0,..1000];
 		let mut ss = String::new();
 		loop {
 			let res = stream.read(buf);
+//			println!("read:{} - sz:{}", res, res.clone().unwrap());
 			if res.is_ok() {
-				for x in buf.iter() {
+			
+				for x in range(0, res.unwrap()) {
+//				   println!("byte:{}", x);
 					unsafe {
-						ss.push_byte(*x);
+						ss.push_byte(buf[x]);
 					}
 				}
+				
+				println!("Message: {}", ss);
+				ss = String::new();
+				
 			}
-			else {
+            else {
 				break;
 			}
 		}
-		println!("< end {}", ss);
+		println!("... disconnect");
 		   // ...
 	}
 	// accept connections and process them, spawning a new tasks for each one
