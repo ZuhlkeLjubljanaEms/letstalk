@@ -4,7 +4,7 @@ use std::io::{Acceptor, Listener};
 
 fn main() {
 
-	let listener = TcpListener::bind("127.0.0.1", 7777);
+	let listener = TcpListener::bind("0.0.0.0", 7777);
 	
 	// bind the listener to the specified address
 	let mut acceptor = listener.listen();
