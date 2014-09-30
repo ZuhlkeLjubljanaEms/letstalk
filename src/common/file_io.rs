@@ -1,5 +1,5 @@
 /** ************************************************************************************************
- * \file      fileIO.rs
+ * \file      file_io.rs
  * \ingroup   Let's_Talk!
  * \brief     
  * \details   
@@ -14,11 +14,11 @@ use std::io::{File, Open, Write, BufferedReader};
 // Automatically generate `Decodable` and `Encodable` trait implementations
 #[deriving(Decodable, Encodable)]
 pub struct FriendInfo  {
-    friend_nickname: String,
-    friend_last_ip_address: String,
+    pub friend_nickname: String,
+    pub friend_last_ip_address: String,
 }
 
-
+#[allow(dead_code)]
 pub fn write_dummy_json_to_file(filename: &str) {
     let will_friend_info = FriendInfo {
         friend_nickname: "Will43".to_string(),
@@ -46,7 +46,7 @@ pub fn read_friends_from_file(filename: &str) -> (Vec<FriendInfo>) {
     
     let mut friend_info_collection: Vec<FriendInfo> = Vec::new();
     for line_iter in file.lines() {
-        let line : String = match line_iter { Ok(x) => x, Err(e) => fail!(e) };
+        let line : String = match line_iter { Ok(x) => x, Err(e) => return friend_info_collection };
         // Deserialize using `json::decode`
         let decoded: FriendInfo = json::decode(line.as_slice()).unwrap();
         //println!("read data: {} decoded from {}", decoded.friend_nickname, line);

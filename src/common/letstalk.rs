@@ -8,9 +8,9 @@
  **************************************************************************************************/
 
 
-extern crate serialize;
-use fileIO::FriendInfo;
-mod fileIO;
+extern crate serialize;             // TODO: why is this required here?  Used in file_io file.
+use file_io::FriendInfo;
+mod file_io;
 
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
 
@@ -18,7 +18,11 @@ static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
 fn main() {
 	println!("Hi, Rusty, let's talk!");
 	
-
-    let mut stored_friend_info: Vec<FriendInfo> = fileIO::read_friends_from_file(FRIEND_LIST_FILENAME);
+    // read the stored friends list to know which friends to request from the server.
+    let mut stored_friend_info: Vec<FriendInfo> = file_io::read_friends_from_file(FRIEND_LIST_FILENAME);
+    for n in range(0u, stored_friend_info.len()) {
+        println!("Friend list contains: {}", stored_friend_info.get(n).friend_nickname);
+    }
+    // now send a request to the server to get their IP addresses.
 	
 }
