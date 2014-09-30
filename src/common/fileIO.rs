@@ -9,7 +9,8 @@
 
 extern crate serialize;
 use serialize::json;
-use std::io::{File, Open, Read, Write, ReadWrite};
+use std::io::{File, Open, Write, BufferedReader};
+use std::from_str::from_str;
 
 
 
@@ -35,9 +36,6 @@ fn write_json_to_file() {
 
     // Serialize using `json::encode`
     let encoded_friend_info = json::encode(&will_friend_info);
-
-    // Deserialize using `json::decode`
-    // let decoded: FriendInfo = json::decode(encoded_friend_info.as_slice()).unwrap();
     
     let path_to_friend_list_file = Path::new(FRIEND_LIST_FILENAME);
 
@@ -47,11 +45,32 @@ fn write_json_to_file() {
         };
     
     //println!("data: {}", encoded_friend_info);
-    friend_list_file.write_line(encoded_friend_info.as_slice());
+    let _ = friend_list_file.write_line(encoded_friend_info.as_slice());
 }
 
 fn read_friends_from_file(filename: &str) -> () {
 
+    let path = Path::new(filename);
+    let mut file = BufferedReader::new(File::open(&path));
+    
+    for line_iter in file.lines() {
+        let line : String = match line_iter { Ok(x) => x, Err(e) => fail!(e) };
+        // Deserialize using `json::decode`
+        let decoded: FriendInfo = json::decode(line.as_slice()).unwrap();
+        println!("read data: {} decoded from {}", decoded.friend_nickname, line);
+    }
 }
+
+#[allow(dead_code)]
+fn parse_str<T: std::from_str::FromStr>(s: &str) -> T {
+    let val = match from_str::<T>(s) {
+        Some(x) => x,
+        None    => fail!("string to number parse error")
+    };
+    val
+}
+
+
+
 
 
