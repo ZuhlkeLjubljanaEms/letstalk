@@ -1,6 +1,9 @@
 extern crate core;
+
+
 use std::io::{TcpListener, TcpStream};
 use std::io::{Acceptor, Listener};
+
 
 fn main() {
 
@@ -16,16 +19,10 @@ fn main() {
 		let mut ss = String::new();
 		loop {
 			let res = stream.read(buf);
-			//println!("res:{}", res);
 			if res.is_ok() {
-				let sz = buf.len();	
-				
-				for x in range(0, sz) {
-					//print!("{}.", buf[x]);
-					//let s = String::from_byte(buf[x]);
-					//ss.append(&s);
+				for x in buf.iter() {
 					unsafe {
-					ss.push_byte(buf[x]);
+						ss.push_byte(*x);
 					}
 				}
 			}
@@ -39,10 +36,7 @@ fn main() {
 	// accept connections and process them, spawning a new tasks for each one
 	for stream in acceptor.incoming() {
 	    match stream {
-	        Err(e) => {
-	        	/* connection failed */
-	        	let _ = e; // discard result
-	        }
+	        Err(e) => { /* connection failed */ }
 	        Ok(stream) => spawn(proc() {
 	            // connection succeeded
 	            handle_client(stream)
