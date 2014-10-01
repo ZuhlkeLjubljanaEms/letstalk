@@ -1,3 +1,4 @@
+#![feature(phase)]
 /** ************************************************************************************************
  * \file      letstalk.rs
  * \ingroup   Let's_Talk!
@@ -6,6 +7,8 @@
  * \author    Jeremy Hannon <hje@zuhlke.com>
  * \date      29th September 2014
  **************************************************************************************************/
+
+#[phase(plugin, link)] extern crate log;
 
 
 extern crate serialize;             // TODO: why is this required here?  Used in file_io file.
