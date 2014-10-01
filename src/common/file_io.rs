@@ -11,14 +11,10 @@
 #[phase(plugin, link)] extern crate log;
 
 extern crate serialize;
-extern crate rustuv;
 use serialize::json;
-use std::io::{File, Open, Write, IoResult, IoError, IoErrorKind, BufferedReader};
+use std::io::{File, Open, Write, IoResult, BufferedReader};
 
 #[test] use std::io::fs::PathExtensions;
-#[test] use rustuv::uvll::errors;
-
-//use std::path;
 
 // Automatically generate `Decodable` and `Encodable` trait implementations
 #[deriving(Decodable, Encodable)]
@@ -61,7 +57,7 @@ pub fn read_friends_from_file(filename: &str) -> (IoResult<Vec<FriendInfo>>) {
             Err(e) => {
                 error!("BufferedReader:lines() returned Err({})", e);
                 return Err(e);
-            }
+            },
         };
         // Deserialize using `json::decode`
         let decoded: FriendInfo = json::decode(line.as_slice()).unwrap();
@@ -81,14 +77,14 @@ fn file_not_present_should_return_error_code() {
     let non_existent_path = Path::new(non_existent_filename);
     //println!("path exists: {}", non_existent_path.exists());
     assert!(!(non_existent_path.exists()));
-    
+
     // When
     let result = read_friends_from_file(non_existent_filename);
 
     // Then
-    let expected = IoError::from_errno(errors::ENOENT as uint, true);
+    //let expected = IoError{kind:std::io::FileNotFound, desc: "couldn't open file ...", detail: None};
     let _ = match result {
-        Err(e) => assert_eq!(e, expected),
-        _ => fail!("Should have returned an IoError")
+        Err(e) => assert_eq!(e.kind, std::io::FileNotFound),
+        _ => fail!("Should have returned an IoError.")
     };
 }
