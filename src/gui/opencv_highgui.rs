@@ -14,17 +14,36 @@ pub enum LoadImageColor {
 
 struct IplImage;
 
-// The libraries used in the following extern block
+// The libraries used in the following extern block.
+// These must be declared here otherwise there are linker errors!
 #[link(name = "opencv_core")]
 #[link(name = "opencv_highgui")]
 
 extern {
-    pub fn cvNamedWindow(name: *const libc::c_char , flags: int ) -> int;   
+    fn cvNamedWindow(name: *const libc::c_char , flags: int ) -> int;   
     
     //IplImage* cvLoadImage(const char* filename, int iscolor=CV_LOAD_IMAGE_COLOR )
-    pub fn cvLoadImage(filename: *const libc::c_char , iscolor: int ) -> *const IplImage;
+    fn cvLoadImage(filename: *const libc::c_char , iscolor: int ) -> *const IplImage;
     
     //void cvShowImage(const char* name, const CvArr* image)
-    pub fn cvShowImage(name: *const libc::c_char, image: *const IplImage); //CvArr );
+    fn cvShowImage(name: *const libc::c_char, image: *const IplImage); //CvArr );
 }
 
+// Adaptor functions
+pub fn named_window(name: &str, flags: int) -> int {
+    name.with_c_str(|cname| unsafe {
+        cvNamedWindow(cname, 0) 
+    })
+}
+
+pub fn load_image(filename: &str, color_type: LoadImageColor) -> *const IplImage {
+    filename.with_c_str(|name| unsafe {
+        cvLoadImage(name, color_type as int) 
+    })
+}
+
+pub fn show_image(window_name: &str, image: *const IplImage) {
+    window_name.with_c_str(|name| unsafe {
+        cvShowImage(name, image) 
+    });
+}
