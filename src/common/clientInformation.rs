@@ -5,13 +5,13 @@ use serialize::Encoder;
 use serialize::Encodable;
 
 #[deriving(Encodable)]
-enum ClientInformationStatus
+pub enum ClientInformationStatus
 {
 	Online,
 	Offline,
 }
 
-struct EncodableTime
+pub struct EncodableTime
 {
 	encodableTime: time::Tm
 }
@@ -39,12 +39,12 @@ impl EncodableTime
 }
 
 #[deriving(Encodable)]
-struct ClientInformation
+pub struct ClientInformation
 {
-	userName: String,
-	ipAddress: String,
-	status: ClientInformationStatus,
-	lastLogon: EncodableTime
+	pub userName: String,
+	pub ipAddress: String,
+	pub status: ClientInformationStatus,
+	pub lastLogon: EncodableTime
 }
 
 impl<E, S: Encoder<E>> Encodable<S, E> for EncodableTime
