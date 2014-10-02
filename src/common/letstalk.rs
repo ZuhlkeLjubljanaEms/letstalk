@@ -11,20 +11,29 @@
 #[phase(plugin, link)] extern crate log;
 
 extern crate serialize;             // TODO: why is this required here?  Used in file_io file.
-//use file_io::FriendInfo;
 use common::message;
-//use message::{Message, SignInMessage};
+use std::io::TcpStream;
+use std::os;
 pub mod file_io;
 pub mod client_information;
 #[path = "..\\common"]
 mod common {pub mod message;}
-//pub mod message {use client_information;}
 
 static USER_INFO_FILENAME: &'static str = "userInfo.json";
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
 
 fn main() {
 	println!("Let's Talk!");
+	
+    let args = os::args();
+    if args.len() < 2 {
+        println!("use: client addr");
+    }
+    let addr = args[1].as_slice();
+	
+	
+	// Open socket to the server.
+    let mut socket = TcpStream::connect(addr, 7777).unwrap();
 	
 	// read client info, such as my nickname
     let result = file_io::read_friends_from_file(USER_INFO_FILENAME);
@@ -44,6 +53,7 @@ fn main() {
     if temp_user_info.is_some() {
         let register_msg = message::Message{messageType: message::sign_in, messageData: message::SignIn(message::SignInMessage{user_name: temp_user_info.unwrap().friend_nickname})};
         // send the message to the server
+        socket.write(register_msg.convertToJSON().into_bytes().as_slice());
     }
     
 	
