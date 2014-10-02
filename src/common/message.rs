@@ -10,7 +10,7 @@ use serialize::Encodable;
 mod common {pub mod client_information;}
 
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub enum MessageType {
     sign_in,		        //client logs into server, provides username
     address_request ,    //client requests IP address of specified client
@@ -21,26 +21,26 @@ pub enum MessageType {
     text,
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct SignInMessage
 {
 	pub user_name: String 
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct AddressRequestMessage
 {
 	pub user_name:String
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct AddressResponseMessage
 {
 	pub user_name: String,
 	pub ip_address: String
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct ClientListRequestMessage;
 
 #[deriving(Encodable)]
@@ -49,13 +49,13 @@ pub struct ClientListResponseMessage
 	pub client_list: Vec<common::client_information::ClientInformation>
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct WebcamMessage
 {
 	pub webcam_data: String
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct TextMessage
 {
 	pub text_data: String

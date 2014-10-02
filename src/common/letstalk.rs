@@ -41,9 +41,10 @@ fn main() {
     
     // send my nickname to the server
     let temp_user_info = stored_user_info.pop();
-    //let my_name = temp_user_info.friend_nickname;
-    //let register_msg = message::Message{messageType: message::sign_in, messageData: message::SignIn(message::SignInMessage{user_name: stored_user_info.pop().friend_nickname})};
-    
+    if temp_user_info.is_some() {
+        let register_msg = message::Message{messageType: message::sign_in, messageData: message::SignIn(message::SignInMessage{user_name: temp_user_info.unwrap().friend_nickname})};
+        // send the message to the server
+    }
     
 	
     // read the stored friends list to know which friends to request from the server.
