@@ -12,6 +12,7 @@ pub enum LoadImageColor {
     CV_LOAD_IMAGE_ANYCOLOR   = 4, // ?, any color
 }
 
+struct CvMat;
 struct IplImage;
 struct CvCapture;
 
@@ -37,6 +38,12 @@ extern {
     
     //int cvWaitKey(int delay=0 )
     fn cvWaitKey(delay: i32) -> i32;
+    
+    //CvMat* cvEncodeImage(const char* ext, const CvArr* image, const int* params=0 )
+    fn cvEncodeImage(ext: *const libc::c_char, image: *const IplImage, params: *const int ) -> *const CvMat;
+
+    //IplImage* cvDecodeImage(const CvMat* buf, int iscolor=CV_LOAD_IMAGE_COLOR)
+    fn cvDecodeImage(buf: *const CvMat, iscolor: int) -> *const IplImage;
 }
 
 // Adaptor functions
@@ -68,4 +75,12 @@ pub fn query_frame(capture: *const CvCapture) -> *const IplImage {
 
 pub fn wait_key(delay: i32) -> i32 {
     unsafe { cvWaitKey(delay) }
+}
+
+pub fn encode_image(ext: &str, image: *const IplImage, params: *const int ) -> *const CvMat {
+    ext.with_c_str(|cext| unsafe { cvEncodeImage(cext, image, params ) })
+}
+
+pub fn decode_image(buf: *const CvMat, color_type: LoadImageColor) -> *const IplImage {
+    unsafe { cvDecodeImage(buf, color_type as int) }
 }

@@ -25,7 +25,12 @@ fn main() {
     let mut camera_image = opencv_highgui::query_frame(camera);
     loop {
         camera_image = opencv_highgui::query_frame(camera);
-        opencv_highgui::show_image(window_name, camera_image);
+        
+        let encoded_image = opencv_highgui::encode_image(".jpeg", camera_image, &0 );
+        
+        let decoded_image = opencv_highgui::decode_image(encoded_image, opencv_highgui::CV_LOAD_IMAGE_UNCHANGED);
+        
+        opencv_highgui::show_image(window_name, decoded_image);
         
         let key = opencv_highgui::wait_key(20);
         if key > -1 {
