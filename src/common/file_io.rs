@@ -12,8 +12,11 @@
 
 extern crate serialize;
 use serialize::json;
-use std::io::{File, Open, Write, IoResult, BufferedReader};
+use std::io::{File, IoResult, BufferedReader};
 
+use std::fmt;
+use std::fmt::Formatter;
+use std::fmt::Show;
 #[test] use std::io::fs::PathExtensions;
 
 // Automatically generate `Decodable` and `Encodable` trait implementations
@@ -23,59 +26,53 @@ pub struct FriendInfo  {
     pub friend_last_ip_address: String,
 }
 
-#[allow(dead_code)]
-pub fn write_dummy_json_to_file(filename: &str) {
-    let will_friend_info = FriendInfo {
-        friend_nickname: "Will43".to_string(),
-        friend_last_ip_address: "192.168.20.151".to_string(),
-    };
-
-    // Serialize using `json::encode`
-    let encoded_friend_info = json::encode(&will_friend_info);
-    
-    let path_to_friend_list_file = Path::new(filename);
-
-    let mut friend_list_file = match File::open_mode(&path_to_friend_list_file, Open, Write) {
-            Ok(friend_list_file) => friend_list_file,
-            Err(e) => fail!("file error: {}", e),
-        };
-    
-    //println!("data: {}", encoded_friend_info);
-    let _ = friend_list_file.write_line(encoded_friend_info.as_slice());
+impl Show for FriendInfo {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Name: {} Ip: {} ", self.friend_nickname, self.friend_last_ip_address)
+    }
 }
 
-pub fn read_friends_from_file(filename: &str) -> (IoResult<Vec<FriendInfo>>) {
+pub fn read_friends_from_file(filename: &str) -> IoResult<Vec<FriendInfo>> {
 
-    let path = Path::new(filename);
-    let mut file = BufferedReader::new(File::open(&path));
-    //println!("file opening returned: {}", file.unwrap());
-    
-    let mut friend_info_collection: Vec<FriendInfo> = Vec::new();
-    for line_iter in file.lines() {
-        let line : String = match line_iter { 
-            Ok(x)  => x, 
-            Err(e) => {
-                error!("BufferedReader:lines() returned Err({})", e);
-                return Err(e);
-            },
-        };
-        // Deserialize using `json::decode`
-        let decoded: FriendInfo = json::decode(line.as_slice()).unwrap();
-        //println!("read data: {} decoded from {}", decoded.friend_nickname, line);
-        friend_info_collection.push(decoded);
+    let mut error_reader = BufferedReader::new(File::open(&Path::new(filename)));
+    if error_reader.lines().any(|a| a.is_err()) {
+    	Err(error_reader.lines().find(|a| a.is_err()).unwrap().unwrap_err())
+    	
+    } else {
+   		let mut friend_reader = BufferedReader::new(File::open(&Path::new(filename)));
+    	let friends: Vec<FriendInfo> = friend_reader.lines().
+    		map(|b| b.unwrap()).
+    		map(|c| json::decode(c.as_slice()).unwrap()).
+    		collect();
+    	Ok(friends)
     }
-    //for n in range(0u, friend_info_collection.len()) {
-    //    println!("Vector contains: {}", friend_info_collection.get(n).friend_nickname);
-    //}
-    Ok(friend_info_collection)
+}
+
+#[test]
+fn read_from_good_file_is_successful() {
+
+    // Given - verify test file doesn't exist
+    let filename: &str = "friendList.json";
+    let path = Path::new(filename);
+    assert!(path.exists());
+
+    // When
+    let result = read_friends_from_file(filename);
+
+    // Then
+    let _ = match result {
+        Err(e) => fail!("Got unexpected error {}", e),
+        Ok(ref d) => assert_eq!(d.len(), 3)
+    };
+    println!("{}", result.unwrap());
 }
 
 #[test]
 fn file_not_present_should_return_error_code() {
+  
     // Given - verify test file doesn't exist
     let non_existent_filename: &str = "nonexistent.json";
     let non_existent_path = Path::new(non_existent_filename);
-    //println!("path exists: {}", non_existent_path.exists());
     assert!(!(non_existent_path.exists()));
 
     // When
@@ -88,3 +85,4 @@ fn file_not_present_should_return_error_code() {
         _ => fail!("Should have returned an IoError.")
     };
 }
+
