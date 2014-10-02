@@ -1,38 +1,30 @@
 // OpenCV
 extern crate libc;
-use libc::c_float;
-use std::io::process::Command;
-use std::io;
-
-struct IplImage;
-
-mod opencv_highgui;
+extern crate opencv;
 
 
 fn main() {
 
     let window_name = "TestGUI";
 
-    let result = opencv_highgui::named_window(window_name, 0);
+    let result = opencv::named_window(window_name, 0);
     
-    let image = opencv_highgui::load_image("ZuhlkeLogo.gif", opencv_highgui::CV_LOAD_IMAGE_UNCHANGED);
-    
-    //opencv_highgui::show_image(window_name, image);
-    
-    let camera = opencv_highgui::capture_from_cam(0);
+    let image = opencv::load_image("ZuhlkeLogo.gif", opencv::CV_LOAD_IMAGE_UNCHANGED);
+        
+    let camera = opencv::capture_from_cam(0);
     
     
-    let mut camera_image = opencv_highgui::query_frame(camera);
+    let mut camera_image = opencv::query_frame(camera);
     loop {
-        camera_image = opencv_highgui::query_frame(camera);
+        camera_image = opencv::query_frame(camera);
         
-        let encoded_image = opencv_highgui::encode_image(".jpeg", camera_image, &0 );
+        let encoded_image = opencv::encode_image(".jpeg", camera_image, &0 );
         
-        let decoded_image = opencv_highgui::decode_image(encoded_image, opencv_highgui::CV_LOAD_IMAGE_UNCHANGED);
+        let decoded_image = opencv::decode_image(encoded_image, opencv::CV_LOAD_IMAGE_UNCHANGED);
         
-        opencv_highgui::show_image(window_name, decoded_image);
+        opencv::show_image(window_name, decoded_image);
         
-        let key = opencv_highgui::wait_key(20);
+        let key = opencv::wait_key(20);
         if key > -1 {
             println!("Key {}", key);
             break;

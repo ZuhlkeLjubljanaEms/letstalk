@@ -1,4 +1,6 @@
-// OpenCV HighGUI C library
+// OpenCV C library adaptor
+#![crate_type = "lib"]
+#![crate_name = "opencv"]
 
 extern crate libc;
 use libc::c_float;
@@ -12,9 +14,9 @@ pub enum LoadImageColor {
     CV_LOAD_IMAGE_ANYCOLOR   = 4, // ?, any color
 }
 
-struct CvMat;
-struct IplImage;
-struct CvCapture;
+pub struct CvMat;
+pub struct IplImage;
+pub struct CvCapture;
 
 // The libraries used in the following extern block.
 // These must be declared here otherwise there are linker errors!
