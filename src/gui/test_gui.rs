@@ -14,6 +14,8 @@ fn main() {
     let mut image = opencv::Image::new(opencv::load_image("ZuhlkeLogo.gif", opencv::CV_LOAD_IMAGE_UNCHANGED));
     let loaded_image = image.get_image();
     
+    image.encoded_image();
+    
     
     let camera = opencv::Camera::new();
     

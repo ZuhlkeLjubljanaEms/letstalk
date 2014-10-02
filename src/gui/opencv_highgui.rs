@@ -6,6 +6,7 @@ extern crate libc;
 use libc::c_float;
 use std::io::process::Command;
 use std::ptr;
+use std::vec::raw;
 
 pub enum LoadImageColor {
     CV_LOAD_IMAGE_UNCHANGED  = -1, // 8bit, color or not
@@ -18,11 +19,15 @@ pub enum LoadImageColor {
 pub struct CvMat;
 pub struct IplImage;
 pub struct CvCapture;
+pub struct CvSize {
+    pub width: i32,
+    pub height: i32
+}
 
 // The libraries used in the following extern block.
 // These must be declared here otherwise there are linker errors!
-#[link(name = "opencv_core249")]
-#[link(name = "opencv_highgui249")]
+#[link(name = "opencv_core")]
+#[link(name = "opencv_highgui")]
 
 extern {
     fn cvNamedWindow(name: *const libc::c_char , flags: int ) -> int;   
@@ -47,6 +52,9 @@ extern {
 
     //IplImage* cvDecodeImage(const CvMat* buf, int iscolor=CV_LOAD_IMAGE_COLOR)
     fn cvDecodeImage(buf: *const CvMat, iscolor: int) -> *const IplImage;
+    
+    //void cvGetRawData(const CvArr* arr, uchar** data, int* step=NULL, CvSize* roi_size=NULL )
+    fn cvGetRawData(arr: *const IplImage, data: *mut*const i8, step: *mut int, roi_size: *mut CvSize );
 }
 
 // Adaptor functions
@@ -102,6 +110,24 @@ impl Image {
     }
     pub fn get_image(&mut self) -> *const IplImage {
         self.image as *const IplImage
+    }
+    
+    pub fn encoded_image(&self) -> Vec<i8> {
+    let p: *const int = ptr::null();
+        let mut data: *const i8 = std::ptr::null();
+        let mut step = 0;
+        let mut roi_size = CvSize{width: 0, height: 0};
+        
+        let encoded_image = encode_image(".jpeg", self.image as *const IplImage, &0 );
+                
+        unsafe {
+            cvGetRawData(encoded_image as *const IplImage, &mut data, &mut step, &mut roi_size);
+        }
+        
+        println!("step: {}, width: {}, height {}", step, roi_size.width, roi_size.height);
+        
+        let size: uint = roi_size.width as uint * roi_size.height as uint;
+        unsafe { std::vec::raw::from_buf(data, size) }
     }
 }
 
