@@ -12,11 +12,13 @@
 
 extern crate serialize;             // TODO: why is this required here?  Used in file_io file.
 //use file_io::FriendInfo;
-//use message::Message;
+use common::message;
 //use message::{Message, SignInMessage};
 pub mod file_io;
 pub mod client_information;
-pub mod message {use client_information;}
+#[path = "..\\common"]
+mod common {pub mod message;}
+//pub mod message {use client_information;}
 
 static USER_INFO_FILENAME: &'static str = "userInfo.json";
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
@@ -26,7 +28,7 @@ fn main() {
 	
 	// read client info, such as my nickname
     let result = file_io::read_friends_from_file(USER_INFO_FILENAME);
-	let stored_user_info = match result {
+	let mut stored_user_info = match result {
         Ok(x)  => x, 
         Err(e) => {
             error!("read_friends_from_file() returned Err({}). What should we do?", e);
@@ -38,9 +40,9 @@ fn main() {
     }
     
     // send my nickname to the server
-    //let test_message_type: MessageType = sign_in;
-    //let sign_inMessage = Message {messageType: sign_in, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
-    //let register_msg = message::Message{messageType: message::sign_in, messageData: SignIn(message::SignInMessage{user_name: stored_user_info.get(0).friend_nickname})};
+    let temp_user_info = stored_user_info.pop();
+    //let my_name = temp_user_info.friend_nickname;
+    //let register_msg = message::Message{messageType: message::sign_in, messageData: message::SignIn(message::SignInMessage{user_name: stored_user_info.pop().friend_nickname})};
     
     
 	

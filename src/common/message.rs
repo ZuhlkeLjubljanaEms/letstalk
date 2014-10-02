@@ -78,11 +78,11 @@ impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
 	{
 		match (*self)
 		{
-			SignIn(ref sign_in) => sign_in.encode(s),
-			AddressRequest(ref address_request) => address_request.encode(s),
-			AddressResponse(ref address_response) => address_response.encode(s),
-			ClientListRequest(ref client_list_request) => client_list_request.encode(s),
-			ClientListResponse(ref client_list_response) => client_list_response.encode(s), 
+			SignIn(ref temp_sign_in) => sign_in.encode(s),
+			AddressRequest(ref temp_address_request) => address_request.encode(s),
+			AddressResponse(ref temp_address_response) => address_response.encode(s),
+			ClientListRequest(ref temp_client_list_request) => client_list_request.encode(s),
+			ClientListResponse(ref temp_client_list_response) => client_list_response.encode(s), 
 			Webcam(ref w) => w.encode(s),
 			Text(ref t) => t.encode(s)
 		}

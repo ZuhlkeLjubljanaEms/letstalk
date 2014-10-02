@@ -1,4 +1,5 @@
-friendList.json
 .metadata
-userInfo.json
 *.rlib
+*.exe
+friendList.json
+userInfo.json
