@@ -23,6 +23,19 @@ struct SignInMessage
 }
 
 #[deriving(Encodable)]
+struct AddressRequestMessage
+{
+	userName:String
+}
+
+#[deriving(Encodable)]
+struct AddressResponseMessage
+{
+	userName: String,
+	ipAddress: String
+}
+
+#[deriving(Encodable)]
 struct ClientListRequestMessage;
 
 #[deriving(Encodable)]
@@ -34,6 +47,8 @@ struct ClientListResponseMessage
  enum MessageData
 {
 	SignIn (SignInMessage),
+	AddressRequest (AddressRequestMessage),
+	AddressResponse (AddressResponseMessage),
 	ClientListRequest (ClientListRequestMessage),
 	ClientListResponse (ClientListResponseMessage)
 }
@@ -45,6 +60,8 @@ impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
 		match (*self)
 		{
 			SignIn(ref sign_in) => sign_in.encode(s),
+			AddressRequest(ref address_request) => address_request.encode(s),
+			AddressResponse(ref address_response) => address_response.encode(s),
 			ClientListRequest(ref client_list_request) => client_list_request.encode(s),
 			ClientListResponse(ref client_list_response) => client_list_response.encode(s), 
 		}
@@ -70,6 +87,13 @@ fn main()
 	print!("SignIn Sample Message:\n");
 	let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {userName: "Test".to_string()})};
 	print!("{}\n\n",signInMessage.convertToJSON());
+	print!("AddressRequest Sample Message:\n");
+	let AddressRequestMessage = Message {messageType: addressRequest, messageData: AddressRequest(AddressRequestMessage {userName: "Test".to_string()})};
+	print!("{}\n\n",AddressRequestMessage.convertToJSON());
+	print!("ClientListRequest Sample Message:\n");
+	print!("AddressResponse Sample Message:\n");
+	let AddressResponseMessage = Message {messageType: addressResponse, messageData: AddressResponse(AddressResponseMessage {userName: "Test".to_string(), ipAddress: "127.0.0.1".to_string()})};
+	print!("{}\n\n",AddressResponseMessage.convertToJSON());
 	print!("ClientListRequest Sample Message:\n");
 	let clientListRequestMessage = Message {messageType: clientListRequest, messageData: ClientListRequest(ClientListRequestMessage)};
 	print!("{}\n\n",clientListRequestMessage.convertToJSON());
