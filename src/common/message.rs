@@ -5,9 +5,6 @@ use serialize::json;
 use serialize::Encoder;
 use serialize::Encodable;
 
-
-mod message {
-
 pub mod client_information;
 
 
@@ -88,7 +85,6 @@ impl Message
 	}
 }
 
-} // end mod message
 
 //fn main()
 //{
