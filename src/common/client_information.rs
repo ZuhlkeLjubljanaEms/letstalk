@@ -1,6 +1,6 @@
 extern crate time;
 extern crate serialize;
-use serialize::json;
+#[test] use serialize::json;
 use serialize::Encoder;
 use serialize::Encodable;
 
@@ -56,9 +56,10 @@ impl<E, S: Encoder<E>> Encodable<S, E> for EncodableTime
 }
 
 
-fn main()
+#[test]
+fn create_basic_client_information_message()
 {
 	let client_information = ClientInformation {user_name: "TestName".to_string(), ip_address: "127.0.0.1".to_string(), status: Online, last_logon: EncodableTime::zero()};
 	let encoded = json::encode(&client_information);
-	print!("Test{}", encoded);
+	assert_eq!(encoded.as_slice(), "{\"user_name\":\"TestName\",\"ip_address\":\"127.0.0.1\",\"status\":\"Online\",\"last_logon\":-28801}")
 }

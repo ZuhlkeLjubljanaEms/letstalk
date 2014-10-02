@@ -10,10 +10,13 @@
 
 #[phase(plugin, link)] extern crate log;
 
-
 extern crate serialize;             // TODO: why is this required here?  Used in file_io file.
 //use file_io::FriendInfo;
-mod file_io;
+//use message::Message;
+//use message::{Message, SignInMessage};
+pub mod file_io;
+pub mod client_information;
+pub mod message {use client_information;}
 
 static USER_INFO_FILENAME: &'static str = "userInfo.json";
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
@@ -35,7 +38,9 @@ fn main() {
     }
     
     // send my nickname to the server
-    
+    //let test_message_type: MessageType = signIn;
+    //let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
+    //let register_msg = message::Message{messageType: message::signIn, messageData: SignIn(message::SignInMessage{user_name: stored_user_info.get(0).friend_nickname})};
     
     
 	
