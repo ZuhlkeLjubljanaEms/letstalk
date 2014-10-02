@@ -40,11 +40,10 @@ pub fn read_friends_from_file(filename: &str) -> IoResult<Vec<FriendInfo>> {
     	
     } else {
    		let mut friend_reader = BufferedReader::new(File::open(&Path::new(filename)));
-    	let friends: Vec<FriendInfo> = friend_reader.lines().
+    	Ok(friend_reader.lines().
     		map(|b| b.unwrap()).
     		map(|c| json::decode(c.as_slice()).unwrap()).
-    		collect();
-    	Ok(friends)
+    		collect())
     }
 }
 
