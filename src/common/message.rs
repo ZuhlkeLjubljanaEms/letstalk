@@ -6,7 +6,8 @@ use serialize::json;
 use serialize::Encoder;
 use serialize::Encodable;
 
-pub mod client_information;
+#[path = "..\\common"]
+mod common {pub mod client_information;}
 
 
 #[deriving(Encodable)]
@@ -16,8 +17,8 @@ pub enum MessageType {
     address_response,    //server sends IP address of specified client 
     client_list_request,  //client requests list of active clients
     client_list_response, //server response to client_list_request
-    broadcast_message,   //client requests message to be sent to all other clients
-    private_message,     //client requests message to be sent to particular client
+    webcam,
+    text,
 }
 
 #[deriving(Encodable)]
@@ -45,16 +46,30 @@ pub struct ClientListRequestMessage;
 #[deriving(Encodable)]
 pub struct ClientListResponseMessage
 {
-	pub client_list: Vec<client_information::ClientInformation>
+	pub client_list: Vec<common::client_information::ClientInformation>
 }
 
- enum MessageData
+#[deriving(Encodable)]
+pub struct WebcamMessage
+{
+	pub webcam_data: String
+}
+
+#[deriving(Encodable)]
+pub struct TextMessage
+{
+	pub text_data: String
+}
+
+pub enum MessageData
 {
 	SignIn (SignInMessage),
 	AddressRequest (AddressRequestMessage),
 	AddressResponse (AddressResponseMessage),
 	ClientListRequest (ClientListRequestMessage),
-	ClientListResponse (ClientListResponseMessage)
+	ClientListResponse (ClientListResponseMessage),
+	Webcam (WebcamMessage),
+	Text (TextMessage)
 }
 
 impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
@@ -68,6 +83,8 @@ impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
 			AddressResponse(ref address_response) => address_response.encode(s),
 			ClientListRequest(ref client_list_request) => client_list_request.encode(s),
 			ClientListResponse(ref client_list_response) => client_list_response.encode(s), 
+			Webcam(ref w) => w.encode(s),
+			Text(ref t) => t.encode(s)
 		}
 	}
 }
@@ -80,7 +97,7 @@ pub struct Message {
 
 impl Message
 {
-	fn convertToJSON(&self) -> String
+	pub fn convertToJSON(&self) -> String
 	{
 		json::encode(self)
 	}
