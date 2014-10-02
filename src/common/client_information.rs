@@ -13,7 +13,7 @@ pub enum ClientInformationStatus
 
 pub struct EncodableTime
 {
-	encodableTime: time::Tm
+	encodable_time: time::Tm
 }
 
 impl EncodableTime
@@ -21,7 +21,7 @@ impl EncodableTime
 	pub fn zero() -> EncodableTime
 	{
 		EncodableTime {
-			encodableTime: time::Tm {
+			encodable_time: time::Tm {
 				tm_sec: 0,
 				tm_min: 0,
 				tm_hour: 0,
@@ -41,24 +41,24 @@ impl EncodableTime
 #[deriving(Encodable)]
 pub struct ClientInformation
 {
-	pub userName: String,
-	pub ipAddress: String,
+	pub user_name: String,
+	pub ip_address: String,
 	pub status: ClientInformationStatus,
-	pub lastLogon: EncodableTime
+	pub last_logon: EncodableTime
 }
 
 impl<E, S: Encoder<E>> Encodable<S, E> for EncodableTime
 {
 	fn encode(&self, s: &mut S) -> Result<(), E>
 	{
-		s.emit_i64(self.encodableTime.to_timespec().sec)
+		s.emit_i64(self.encodable_time.to_timespec().sec)
 	}
 }
 
 
 fn main()
 {
-	let clientInformation = ClientInformation {userName: "TestName".to_string(), ipAddress: "127.0.0.1".to_string(), status: Online, lastLogon: EncodableTime::zero()};
-	let encoded = json::encode(&clientInformation);
+	let client_information = ClientInformation {user_name: "TestName".to_string(), ip_address: "127.0.0.1".to_string(), status: Online, last_logon: EncodableTime::zero()};
+	let encoded = json::encode(&client_information);
 	print!("Test{}", encoded);
 }

@@ -19,20 +19,20 @@ pub enum MessageType {
 #[deriving(Encodable)]
 struct SignInMessage
 {
-	userName:String 
+	user_name:String 
 }
 
 #[deriving(Encodable)]
 struct AddressRequestMessage
 {
-	userName:String
+	user_name:String
 }
 
 #[deriving(Encodable)]
 struct AddressResponseMessage
 {
-	userName: String,
-	ipAddress: String
+	user_name: String,
+	ip_address: String
 }
 
 #[deriving(Encodable)]
@@ -85,14 +85,14 @@ impl Message
 fn main()
 {
 	print!("SignIn Sample Message:\n");
-	let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {userName: "Test".to_string()})};
+	let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
 	print!("{}\n\n",signInMessage.convertToJSON());
 	print!("AddressRequest Sample Message:\n");
-	let AddressRequestMessage = Message {messageType: addressRequest, messageData: AddressRequest(AddressRequestMessage {userName: "Test".to_string()})};
+	let AddressRequestMessage = Message {messageType: addressRequest, messageData: AddressRequest(AddressRequestMessage {user_name: "Test".to_string()})};
 	print!("{}\n\n",AddressRequestMessage.convertToJSON());
 	print!("ClientListRequest Sample Message:\n");
 	print!("AddressResponse Sample Message:\n");
-	let AddressResponseMessage = Message {messageType: addressResponse, messageData: AddressResponse(AddressResponseMessage {userName: "Test".to_string(), ipAddress: "127.0.0.1".to_string()})};
+	let AddressResponseMessage = Message {messageType: addressResponse, messageData: AddressResponse(AddressResponseMessage {user_name: "Test".to_string(), ip_address: "127.0.0.1".to_string()})};
 	print!("{}\n\n",AddressResponseMessage.convertToJSON());
 	print!("ClientListRequest Sample Message:\n");
 	let clientListRequestMessage = Message {messageType: clientListRequest, messageData: ClientListRequest(ClientListRequestMessage)};
@@ -103,17 +103,17 @@ fn main()
 	{
 		ClientListResponse(ref mut client_list_response) =>	{
 			client_list_response.clientList.push(clientInformation::ClientInformation {
-				userName: "CBSW".to_string(), 
-				ipAddress: "192.168.0.1".to_string(), 
+				user_name: "CBSW".to_string(), 
+				ip_address: "192.168.0.1".to_string(), 
 				status: clientInformation::Online, 
-				lastLogon: clientInformation::EncodableTime::zero()
+				last_logon: clientInformation::EncodableTime::zero()
 				}
 			);
 			client_list_response.clientList.push(clientInformation::ClientInformation {
-				userName: "TestName".to_string(), 
-				ipAddress: "192.168.0.2".to_string(), 
+				user_name: "TestName".to_string(), 
+				ip_address: "192.168.0.2".to_string(), 
 				status: clientInformation::Online, 
-				lastLogon: clientInformation::EncodableTime::zero()
+				last_logon: clientInformation::EncodableTime::zero()
 				}
 			);
 		},
