@@ -20,8 +20,8 @@ pub struct CvCapture;
 
 // The libraries used in the following extern block.
 // These must be declared here otherwise there are linker errors!
-#[link(name = "opencv_core")]
-#[link(name = "opencv_highgui")]
+#[link(name = "opencv_core249")]
+#[link(name = "opencv_highgui249")]
 
 extern {
     fn cvNamedWindow(name: *const libc::c_char , flags: int ) -> int;   
