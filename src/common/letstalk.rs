@@ -38,9 +38,9 @@ fn main() {
     }
     
     // send my nickname to the server
-    //let test_message_type: MessageType = signIn;
-    //let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
-    //let register_msg = message::Message{messageType: message::signIn, messageData: SignIn(message::SignInMessage{user_name: stored_user_info.get(0).friend_nickname})};
+    //let test_message_type: MessageType = sign_in;
+    //let sign_inMessage = Message {messageType: sign_in, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
+    //let register_msg = message::Message{messageType: message::sign_in, messageData: SignIn(message::SignInMessage{user_name: stored_user_info.get(0).friend_nickname})};
     
     
 	

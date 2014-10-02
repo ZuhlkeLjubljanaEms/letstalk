@@ -1,4 +1,5 @@
-//#![feature(globs)]
+//#![crate_type = "lib"]
+//#![crate_name = "message"]
 
 extern crate serialize;
 use serialize::json;
@@ -10,13 +11,13 @@ pub mod client_information;
 
 #[deriving(Encodable)]
 pub enum MessageType {
-    signIn,		        //client logs into server, provides username
-    addressRequest ,    //client requests IP address of specified client
-    addressResponse,    //server sends IP address of specified client 
-    client_listRequest,  //client requests list of active clients
-    client_listResponse, //server response to client_listRequest
-    broadcastMessage,   //client requests message to be sent to all other clients
-    privateMessage,     //client requests message to be sent to particular client
+    sign_in,		        //client logs into server, provides username
+    address_request ,    //client requests IP address of specified client
+    address_response,    //server sends IP address of specified client 
+    client_list_request,  //client requests list of active clients
+    client_list_response, //server response to client_list_request
+    broadcast_message,   //client requests message to be sent to all other clients
+    private_message,     //client requests message to be sent to particular client
 }
 
 #[deriving(Encodable)]
@@ -89,21 +90,21 @@ impl Message
 //fn main()
 //{
 //	print!("SignIn Sample Message:\n");
-//	let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
-//	print!("{}\n\n",signInMessage.convertToJSON());
+//	let sign_inMessage = Message {messageType: sign_in, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
+//	print!("{}\n\n",sign_inMessage.convertToJSON());
 //	print!("AddressRequest Sample Message:\n");
-//	let AddressRequestMessage = Message {messageType: addressRequest, messageData: AddressRequest(AddressRequestMessage {user_name: "Test".to_string()})};
+//	let AddressRequestMessage = Message {messageType: address_request, messageData: AddressRequest(AddressRequestMessage {user_name: "Test".to_string()})};
 //	print!("{}\n\n",AddressRequestMessage.convertToJSON());
 //	print!("ClientListRequest Sample Message:\n");
 //	print!("AddressResponse Sample Message:\n");
-//	let AddressResponseMessage = Message {messageType: addressResponse, messageData: AddressResponse(AddressResponseMessage {user_name: "Test".to_string(), ip_address: "127.0.0.1".to_string()})};
+//	let AddressResponseMessage = Message {messageType: address_response, messageData: AddressResponse(AddressResponseMessage {user_name: "Test".to_string(), ip_address: "127.0.0.1".to_string()})};
 //	print!("{}\n\n",AddressResponseMessage.convertToJSON());
 //	print!("ClientListRequest Sample Message:\n");
-//	let client_listRequestMessage = Message {messageType: client_listRequest, messageData: ClientListRequest(ClientListRequestMessage)};
-//	print!("{}\n\n",client_listRequestMessage.convertToJSON());
+//	let client_list_requestMessage = Message {messageType: client_list_request, messageData: ClientListRequest(ClientListRequestMessage)};
+//	print!("{}\n\n",client_list_requestMessage.convertToJSON());
 //	print!("ClientListResponse Sample Message:\n");
-//	let mut client_listResponseMessage = Message {messageType: client_listResponse, messageData: ClientListResponse(ClientListResponseMessage {client_list: Vec::new()})};
-//	match client_listResponseMessage.messageData
+//	let mut client_list_responseMessage = Message {messageType: client_list_response, messageData: ClientListResponse(ClientListResponseMessage {client_list: Vec::new()})};
+//	match client_list_responseMessage.messageData
 //	{
 //		ClientListResponse(ref mut client_list_response) =>	{
 //			client_list_response.client_list.push(clientInformation::ClientInformation {
@@ -123,5 +124,5 @@ impl Message
 //		},
 //		_	=> {}
 //	} 
-//	print!("{}\n\n",client_listResponseMessage.convertToJSON());
+//	print!("{}\n\n",client_list_responseMessage.convertToJSON());
 //}
