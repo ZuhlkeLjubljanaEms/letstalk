@@ -51,9 +51,9 @@ fn main() {
     // send my nickname to the server
     let temp_user_info = stored_user_info.pop();
     if temp_user_info.is_some() {
-        let register_msg = message::Message{messageType: message::sign_in, messageData: message::SignIn(message::SignInMessage{user_name: temp_user_info.unwrap().friend_nickname})};
+        let register_msg = message::Message{message_type: message::signIn, message_data: message::SignIn(message::SignInMessage{user_name: temp_user_info.unwrap().friend_nickname})};
         // send the message to the server
-        socket.write(register_msg.convertToJSON().into_bytes().as_slice());
+        socket.write(register_msg.convert_to_json().into_bytes().as_slice());
     }
     
 	
