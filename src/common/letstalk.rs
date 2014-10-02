@@ -12,19 +12,36 @@
 
 
 extern crate serialize;             // TODO: why is this required here?  Used in file_io file.
-use file_io::FriendInfo;
+//use file_io::FriendInfo;
 mod file_io;
 
+static USER_INFO_FILENAME: &'static str = "userInfo.json";
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
 
-
 fn main() {
-	println!("Hi, Rusty, let's talk!");
+	println!("Let's Talk!");
+	
+	// read client info, such as my nickname
+    let result = file_io::read_friends_from_file(USER_INFO_FILENAME);
+	let stored_user_info = match result {
+        Ok(x)  => x, 
+        Err(e) => {
+            error!("read_friends_from_file() returned Err({}). What should we do?", e);
+            Vec::new()
+        }
+    };
+    for n in range(0u, stored_user_info.len()) {
+        println!("User Info contains: {}", stored_user_info.get(n).friend_nickname);
+    }
+    
+    // send my nickname to the server
+    
+    
+    
 	
     // read the stored friends list to know which friends to request from the server.
     let result = file_io::read_friends_from_file(FRIEND_LIST_FILENAME);
-    // TODO: try using 'try' instead of 'match'.
-    let mut stored_friend_info = match result {
+    let stored_friend_info = match result {
         Ok(x)  => x, 
         Err(e) => {
 	        error!("read_friends_from_file() returned Err({}). What should we do?", e);
