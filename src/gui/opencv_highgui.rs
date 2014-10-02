@@ -34,6 +34,9 @@ extern {
     
     //IplImage* cvQueryFrame(CvCapture* capture)
     fn cvQueryFrame(capture:*const  CvCapture) -> *const IplImage;
+    
+    //int cvWaitKey(int delay=0 )
+    fn cvWaitKey(delay: i32) -> i32;
 }
 
 // Adaptor functions
@@ -61,4 +64,8 @@ pub fn capture_from_cam(device: int) -> *const CvCapture {
    
 pub fn query_frame(capture: *const CvCapture) -> *const IplImage {
     unsafe { cvQueryFrame(capture) }
+}
+
+pub fn wait_key(delay: i32) -> i32 {
+    unsafe { cvWaitKey(delay) }
 }

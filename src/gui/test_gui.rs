@@ -27,5 +27,10 @@ fn main() {
         camera_image = opencv_highgui::query_frame(camera);
         opencv_highgui::show_image(window_name, camera_image);
         
+        let key = opencv_highgui::wait_key(20);
+        if key > -1 {
+            println!("Key {}", key);
+            break;
+        }
     }
 }
