@@ -17,9 +17,15 @@ fn main() {
     
     let image = opencv_highgui::load_image("ZuhlkeLogo.gif", opencv_highgui::CV_LOAD_IMAGE_UNCHANGED);
     
-    opencv_highgui::show_image(window_name, image);
+    //opencv_highgui::show_image(window_name, image);
     
-    print!("Press <Enter> to exit");
-    let mut reader = std::io::stdin();
-    reader.read_line();
+    let camera = opencv_highgui::capture_from_cam(0);
+    
+    
+    let mut camera_image = opencv_highgui::query_frame(camera);
+    loop {
+        camera_image = opencv_highgui::query_frame(camera);
+        opencv_highgui::show_image(window_name, camera_image);
+        
+    }
 }

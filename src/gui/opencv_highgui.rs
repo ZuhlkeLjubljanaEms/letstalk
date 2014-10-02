@@ -13,6 +13,7 @@ pub enum LoadImageColor {
 }
 
 struct IplImage;
+struct CvCapture;
 
 // The libraries used in the following extern block.
 // These must be declared here otherwise there are linker errors!
@@ -27,6 +28,12 @@ extern {
     
     //void cvShowImage(const char* name, const CvArr* image)
     fn cvShowImage(name: *const libc::c_char, image: *const IplImage); //CvArr );
+    
+    //CvCapture* cvCaptureFromCAM(int device) - in library as cvCreateCameraCapture()
+    fn cvCreateCameraCapture(device: int) -> *const CvCapture;
+    
+    //IplImage* cvQueryFrame(CvCapture* capture)
+    fn cvQueryFrame(capture:*const  CvCapture) -> *const IplImage;
 }
 
 // Adaptor functions
@@ -46,4 +53,12 @@ pub fn show_image(window_name: &str, image: *const IplImage) {
     window_name.with_c_str(|name| unsafe {
         cvShowImage(name, image) 
     });
+}
+
+pub fn capture_from_cam(device: int) -> *const CvCapture {
+    unsafe { cvCreateCameraCapture(device) }
+}
+   
+pub fn query_frame(capture: *const CvCapture) -> *const IplImage {
+    unsafe { cvQueryFrame(capture) }
 }
