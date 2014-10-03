@@ -1,12 +1,16 @@
 extern crate core;
 extern crate ip_listener;
+extern crate serialize;
 
+use serialize::base64::FromBase64;
 use std::io::TcpStream;
 
 use ip_listener::IChatListener;
 
+use common::message;
 
-
+#[path = "..\\common"]
+mod common {pub mod message;}
 
 struct ChatListener {    dummy : int}
 
@@ -37,7 +41,13 @@ impl IChatListener for ChatListener {
                     }
                 }
                 
-                println!("Message: {}", ss);
+                println!("{}",ss);
+                let decoded: message::Message = serialize::json::decode(ss.as_slice()).unwrap();
+                match decoded
+                {
+                	message::Webcam(w) => println!("Message: {}", w.webcam_data.as_slice().from_base64()),
+                	_	=> ()
+                }
                 ss = String::new();
                 
             }

@@ -5,63 +5,66 @@ extern crate serialize;
 use serialize::json;
 use serialize::Encoder;
 use serialize::Encodable;
+use serialize::Decoder;
+use serialize::Decodable;
 
 #[path = "..\\common"]
 mod common {pub mod client_information;}
 
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable, Show)]
 pub enum MessageType {
-    sign_in,		        //client logs into server, provides username
-    address_request ,    //client requests IP address of specified client
-    address_response,    //server sends IP address of specified client 
-    client_list_request,  //client requests list of active clients
-    client_list_response, //server response to client_list_request
+    signIn,		        //client logs into server, provides username
+    addressRequest ,    //client requests IP address of specified client
+    addressResponse,    //server sends IP address of specified client 
+    clientListRequest,  //client requests list of active clients
+    clientListResponse, //server response to client_list_request
     webcam,
     text,
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct SignInMessage
 {
 	pub user_name: String 
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct AddressRequestMessage
 {
 	pub user_name:String
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct AddressResponseMessage
 {
 	pub user_name: String,
 	pub ip_address: String
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct ClientListRequestMessage;
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct ClientListResponseMessage
 {
 	pub client_list: Vec<common::client_information::ClientInformation>
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct WebcamMessage
 {
 	pub webcam_data: String
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub struct TextMessage
 {
 	pub text_data: String
 }
 
-pub enum MessageData
+#[deriving(Encodable, Decodable)]
+pub enum Message
 {
 	SignIn (SignInMessage),
 	AddressRequest (AddressRequestMessage),
@@ -72,28 +75,28 @@ pub enum MessageData
 	Text (TextMessage)
 }
 
-impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
-{
-	fn encode(&self, s: &mut S) -> Result<(), E>
-	{
-		match (*self)
-		{
-			SignIn(ref sign_in) => sign_in.encode(s),
-			AddressRequest(ref address_request) => address_request.encode(s),
-			AddressResponse(ref address_response) => address_response.encode(s),
-			ClientListRequest(ref client_list_request) => client_list_request.encode(s),
-			ClientListResponse(ref client_list_response) => client_list_response.encode(s), 
-			Webcam(ref w) => w.encode(s),
-			Text(ref t) => t.encode(s)
-		}
-	}
-}
+//impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
+//{
+//	fn encode(&self, s: &mut S) -> Result<(), E>
+//	{
+//		match (*self)
+//		{
+//			SignIn(ref sign_in) => sign_in.encode(s),
+//			AddressRequest(ref address_request) => address_request.encode(s),
+//			AddressResponse(ref address_response) => address_response.encode(s),
+//			ClientListRequest(ref client_list_request) => client_list_request.encode(s),
+//			ClientListResponse(ref client_list_response) => client_list_response.encode(s), 
+//			Webcam(ref w) => w.encode(s),
+//			Text(ref t) => t.encode(s)
+//		}
+//	}
+//}
     
-#[deriving(Encodable)]
-pub struct Message {
-    pub messageType: MessageType,
-   	pub messageData: MessageData,
-}
+//#[deriving(Encodable, Decodable)]
+//pub struct Message {
+//    pub messageType: MessageType,
+//  	pub messageData: MessageData,
+//}
 
 impl Message
 {
@@ -102,6 +105,33 @@ impl Message
 		json::encode(self)
 	}
 }
+
+//impl<E, D: Decoder<E>> Decodable<D, E> for Message
+//{
+//    fn decode(d: &mut D) -> Result<Message, E>
+//    {
+//    	let mut message = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
+//    	let strings = ["signIn", "addressRequest" , "addressResponse", "clientListRequest", "clientListResponse", "webcam", "text"];
+//    	let message_type = d.read_enum_variant(strings,
+//    	|a,intValue| -> Result<MessageType,E> {match (intValue) {
+//  			0 =>  Ok(signIn),
+//  			_ =>  Ok(addressRequest)
+//  		}});
+//  		   
+//  		match message_type
+//    	{
+//    		Ok(signIn) => Decodable::decode(d),
+//			Ok(addressRequest) => message.messageData.AddressRequest.decode(d),
+//			Ok(addressResponse) => message.messageData.AddressResponse.decode(d),
+//			Ok(clientListRequest) => message.messageData.ClientListRequest.decode(d),
+//			Ok(clientListResponse) => message.messageDataClientListResponse.decode(d),
+//			Ok(webcam) => message.messageData.Webcam.decode(d),
+//			Ok(text) => message.messageData.Text.decode(d),
+//    	}
+//    	
+//    	message
+//    }
+//}
 
 
 //fn main()
