@@ -22,11 +22,11 @@ fn main() {
     loop {
         let mut camera_image = camera.grab_image();
         
-        //let encoded_image = opencv::encode_image(".jpeg", camera_image, &0 );
+        let mut encoded_image = camera_image.encoded_image();
         
-        //let decoded_image = opencv::decode_image(encoded_image, opencv::CV_LOAD_IMAGE_UNCHANGED);
+        image.decode_image(&mut encoded_image);
         
-        opencv::show_image(window_name, camera_image.get_image());
+        opencv::show_image(window_name, image.get_image());
         
         let key = opencv::wait_key(20);
         if key > -1 {

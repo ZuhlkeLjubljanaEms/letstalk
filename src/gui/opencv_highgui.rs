@@ -51,10 +51,16 @@ extern {
     fn cvEncodeImage(ext: *const libc::c_char, image: *const IplImage, params: *const int ) -> *const CvMat;
 
     //IplImage* cvDecodeImage(const CvMat* buf, int iscolor=CV_LOAD_IMAGE_COLOR)
-    fn cvDecodeImage(buf: *const CvMat, iscolor: int) -> *const IplImage;
+    fn cvDecodeImage(buf: *const CvMat, iscolor: int) -> *mut IplImage;
     
     //void cvGetRawData(const CvArr* arr, uchar** data, int* step=NULL, CvSize* roi_size=NULL )
     fn cvGetRawData(arr: *const IplImage, data: *mut*const i8, step: *mut int, roi_size: *mut CvSize );
+
+    //CvMat* cvCreateMatHeader(int rows, int cols, int type)
+    fn cvCreateMatHeader(rows: int, cols: int, datatype: int) -> *mut CvMat; 
+    
+    //void cvSetData(CvArr* arr, void* data, int step)
+    fn cvSetData(arr: *mut CvMat, data: *mut i8, step: int);
 }
 
 // Adaptor functions
@@ -92,7 +98,7 @@ pub fn encode_image(ext: &str, image: *const IplImage, params: *const int ) -> *
     ext.with_c_str(|cext| unsafe { cvEncodeImage(cext, image, params ) })
 }
 
-pub fn decode_image(buf: *const CvMat, color_type: LoadImageColor) -> *const IplImage {
+pub fn decode_image(buf: *const CvMat, color_type: LoadImageColor) -> *mut IplImage {
     unsafe { cvDecodeImage(buf, color_type as int) }
 }
 
@@ -113,7 +119,7 @@ impl Image {
     }
     
     pub fn encoded_image(&self) -> Vec<i8> {
-    let p: *const int = ptr::null();
+        let p: *const int = ptr::null();
         let mut data: *const i8 = std::ptr::null();
         let mut step = 0;
         let mut roi_size = CvSize{width: 0, height: 0};
@@ -128,6 +134,20 @@ impl Image {
         
         let size: uint = roi_size.width as uint * roi_size.height as uint;
         unsafe { std::vec::raw::from_buf(data, size) }
+    }
+    
+    pub fn decode_image(&mut self, encoded: &mut Vec<i8> ) {
+    
+        println!("--->decode vec length: {}", encoded.len());
+        unsafe { 
+            let mut cvmat = cvCreateMatHeader(encoded.len() as int, 1, 0);
+    
+            cvSetData(cvmat, encoded.as_mut_ptr(), encoded.len() as int); 
+        
+    //void cvSetData(CvArr* arr, void* data, int step)
+        
+        self.image = decode_image(cvmat as *const CvMat, CV_LOAD_IMAGE_UNCHANGED);
+        }
     }
 }
 
