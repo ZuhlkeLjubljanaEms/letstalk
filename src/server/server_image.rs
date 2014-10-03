@@ -35,28 +35,58 @@ impl IChatListener for ChatListener {
     
         let mut image = opencv::Image::new(opencv::load_image("ZuhlkeLogo.gif", opencv::CV_LOAD_IMAGE_UNCHANGED));
     
+    	let mut buf_vec: Vec<u8> = Vec::new();
+    	let res = stream.read(buf);
+    	let ss = res.unwrap();
+    	buf_vec.push_all(buf.slice(0, ss));
         loop {
-            let res = stream.read(buf);
-            if res.is_ok() {
-            let ss = res.unwrap();
-             let mut buf_vec = buf.slice(0, ss).to_vec();
-                
-                if ss < 1000000
-                {
+        	while (buf_vec.len() < 4)
+        	{
+        		let res = stream.read(buf);
+        		let ss = res.unwrap();
+        		buf_vec.push_all(buf.slice(0, ss));
+        	}
+        		
+            	let mut size: u32 = 0;
+        		size+=buf_vec[0] as u32;
+        		size+=buf_vec[1] as u32 *0x100;
+        		size+=buf_vec[2] as u32 *0x10000;
+        		size+=buf_vec[3] as u32 *0x1000000;
+        		
+        		println!("{}",size);
+            	
+             	
+        
+             	
+        		while (buf_vec.len() < (size as uint))
+        		{
+        			let res = stream.read(buf);
+        			let ss = res.unwrap();
+        			buf_vec.push_all(buf.slice(0, ss));
+        		}   
+        		
+        		let mut image_vector = buf_vec.slice_mut(4, size as uint + 4 ).to_vec();
+        		
+        		let length=buf_vec.len();
+        		if (size as uint != length)
+        		{
+        			println!("Before Slice");
+        			buf_vec = buf_vec.slice_mut(size as uint + 4 ,length).to_vec();
+        		}
+        		else
+        		{
+        			buf_vec.clear();
+        		}
+        			
             
-               		image.decode_image(&mut buf_vec);
+               		image.decode_image(&mut image_vector);
         
             	   opencv::show_image(window_name, image.get_image());
-            	  }
             	   let key = opencv::wait_key(20);
 			        if key > -1 {
 			            println!("Key {}", key);
 			            break;
 			        }
-            }
-            else {
-                break;
-            }
         }
         println!("... disconnect");
       //  })
