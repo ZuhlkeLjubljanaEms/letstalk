@@ -12,13 +12,13 @@ use serialize::Decodable;
 mod common {pub mod client_information;}
 
 
-#[deriving(Encodable, Decodable, Show)]
+#[deriving(Encodable, Decodable)]
 pub enum MessageType {
     signIn,		        //client logs into server, provides username
-    addressRequest ,    //client requests IP address of specified client
+    addressRequest,     //client requests IP address of specified client
     addressResponse,    //server sends IP address of specified client 
     clientListRequest,  //client requests list of active clients
-    clientListResponse, //server response to client_list_request
+    clientListResponse, //server response to clientListRequest
     webcam,
     text,
 }
@@ -32,7 +32,7 @@ pub struct SignInMessage
 #[deriving(Encodable, Decodable)]
 pub struct AddressRequestMessage
 {
-	pub user_name:String
+	pub user_name: String
 }
 
 #[deriving(Encodable, Decodable)]
@@ -137,31 +137,31 @@ impl Message
 //fn main()
 //{
 //	print!("SignIn Sample Message:\n");
-//	let sign_inMessage = Message {messageType: sign_in, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
-//	print!("{}\n\n",sign_inMessage.convertToJSON());
+//	let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
+//	print!("{}\n\n",signInMessage.convertToJSON());
 //	print!("AddressRequest Sample Message:\n");
-//	let AddressRequestMessage = Message {messageType: address_request, messageData: AddressRequest(AddressRequestMessage {user_name: "Test".to_string()})};
+//	let AddressRequestMessage = Message {messageType: addressRequest, messageData: AddressRequest(AddressRequestMessage {user_name: "Test".to_string()})};
 //	print!("{}\n\n",AddressRequestMessage.convertToJSON());
 //	print!("ClientListRequest Sample Message:\n");
 //	print!("AddressResponse Sample Message:\n");
-//	let AddressResponseMessage = Message {messageType: address_response, messageData: AddressResponse(AddressResponseMessage {user_name: "Test".to_string(), ip_address: "127.0.0.1".to_string()})};
+//	let AddressResponseMessage = Message {messageType: addressResponse, messageData: AddressResponse(AddressResponseMessage {user_name: "Test".to_string(), ip_address: "127.0.0.1".to_string()})};
 //	print!("{}\n\n",AddressResponseMessage.convertToJSON());
 //	print!("ClientListRequest Sample Message:\n");
-//	let client_list_requestMessage = Message {messageType: client_list_request, messageData: ClientListRequest(ClientListRequestMessage)};
-//	print!("{}\n\n",client_list_requestMessage.convertToJSON());
+//	let clientListRequestMessage = Message {messageType: clientListRequest, messageData: ClientListRequest(ClientListRequestMessage)};
+//	print!("{}\n\n",clientListRequestMessage.convertToJSON());
 //	print!("ClientListResponse Sample Message:\n");
-//	let mut client_list_responseMessage = Message {messageType: client_list_response, messageData: ClientListResponse(ClientListResponseMessage {client_list: Vec::new()})};
-//	match client_list_responseMessage.messageData
+//	let mut clientListResponseMessage = Message {messageType: clientListResponse, messageData: ClientListResponse(ClientListResponseMessage {client_list: Vec::new()})};
+//	match clientListResponseMessage.messageData
 //	{
-//		ClientListResponse(ref mut client_list_response) =>	{
-//			client_list_response.client_list.push(clientInformation::ClientInformation {
+//		ClientListResponse(ref mut clientListResponse) =>	{
+//			clientListResponse.client_list.push(clientInformation::ClientInformation {
 //				user_name: "CBSW".to_string(), 
 //				ip_address: "192.168.0.1".to_string(), 
 //				status: clientInformation::Online, 
 //				last_logon: clientInformation::EncodableTime::zero()
 //				}
 //			);
-//			client_list_response.client_list.push(clientInformation::ClientInformation {
+//			clientListResponse.client_list.push(clientInformation::ClientInformation {
 //				user_name: "TestName".to_string(), 
 //				ip_address: "192.168.0.2".to_string(), 
 //				status: clientInformation::Online, 
@@ -171,5 +171,5 @@ impl Message
 //		},
 //		_	=> {}
 //	} 
-//	print!("{}\n\n",client_list_responseMessage.convertToJSON());
+//	print!("{}\n\n",clientListResponseMessage.convertToJSON());
 //}
