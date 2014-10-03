@@ -140,7 +140,7 @@ impl Image {
     
         println!("--->decode vec length: {}", encoded.len());
         unsafe { 
-            let mut cvmat = cvCreateMatHeader(encoded.len() as int, 1, 0);
+            let mut cvmat = cvCreateMatHeader(1, encoded.len() as int, 0);
     
             cvSetData(cvmat, encoded.as_mut_ptr(), encoded.len() as int); 
         
