@@ -77,5 +77,7 @@ fn main() {
 	        let _ = socket.write(address_request_msg.convert_to_json().into_bytes().as_slice());
 	    }
     }
-	
+    
+    
+    println!("Let's Talk again some time ;)");
 }
