@@ -9,7 +9,7 @@ use ip_listener::IChatListener;
 
 use common::message;
 
-#[path = "..\\common"]
+#[path = "../common"]
 mod common {pub mod message;}
 
 struct ChatListener {    dummy : int}

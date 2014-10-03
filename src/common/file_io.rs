@@ -50,7 +50,7 @@ pub fn read_friends_from_file(filename: &str) -> IoResult<Vec<FriendInfo>> {
 #[test]
 fn read_from_good_file_is_successful() {
 
-    // Given - verify test file doesn't exist
+    // Given - verify test file exists
     let filename: &str = "TestFriendsList.json";
     let path = Path::new(filename);
     assert!(path.exists());
