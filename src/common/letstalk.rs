@@ -14,10 +14,12 @@ extern crate serialize;             // TODO: why is this required here?  Used in
 use common::message;
 use std::io::TcpStream;
 use std::os;
-pub mod file_io;
-pub mod client_information;
-#[path = "..\\common"]
-mod common {pub mod message;}
+#[path = "../common"]
+mod common {
+	pub mod client_information;
+	pub mod file_io;
+	pub mod message;
+}
 
 static USER_INFO_FILENAME: &'static str = "userInfo.json";
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
@@ -27,7 +29,7 @@ fn main() {
 	
     let args = os::args();
     if args.len() < 2 {
-        println!("use: client addr");
+        println!("use: letstalk server_addr");
     }
     let addr = args[1].as_slice();
 	
@@ -68,11 +70,15 @@ fn main() {
 	        Vec::new()
         }
     };
-    
+
+    // spawn a thread to listen for server responses
+    let server_friend_info = Vector<AddressResponseMessage>;
+    handle_server_friend_info_responses(server_friend_info);
+
     // send list of friends to the server to request their IP addresses.
     for n in range(0u, stored_friend_info.len()) {
         println!("Friend list contains: {}", stored_friend_info.get(n).friend_nickname);
-        let temp_friend_info = stored_user_info.pop();
+        let temp_friend_info = stored_friend_info.pop();
         if temp_friend_info.is_some() {
 	        let address_request_msg = message::Message {
 	                   message_type: message::addressRequest, 
@@ -80,7 +86,10 @@ fn main() {
 	                           user_name: temp_friend_info.unwrap().friend_nickname})
 	                   };
 	        // send the message to the server
-	        let _ = socket.write(address_request_msg.convert_to_json().into_bytes().as_slice());
+	        match socket.write(address_request_msg.convert_to_json().into_bytes().as_slice()) {
+                Err(e) => error!("couldn't send friend info to server: {}", e),
+		        Ok(_) => {}
+		    }
 	    }
     }
 	
