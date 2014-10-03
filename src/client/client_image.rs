@@ -24,7 +24,7 @@ fn main() {
 	
 	let q= String::from_str("quit");
 
-    let window_name = "TestGUI";
+    let window_name = "Client GUI";
 
     let result = opencv::named_window(window_name, 0);
     
@@ -32,7 +32,7 @@ fn main() {
     let mut image = opencv::Image::new(opencv::load_image("ZuhlkeLogo.gif", opencv::CV_LOAD_IMAGE_UNCHANGED));
     let loaded_image = image.get_image();
     
-    image.encoded_image();
+    //image.encoded_image();
     
     let camera = opencv::Camera::new();
 
