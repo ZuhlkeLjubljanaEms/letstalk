@@ -9,7 +9,7 @@ use ip_listener::IChatListener;
 
 use common::message;
 
-#[path = "..\\common"]
+#[path = "../common"]
 mod common {pub mod message;}
 
 struct ChatListener {    dummy : int}
@@ -32,6 +32,7 @@ impl IChatListener for ChatListener {
         loop {
             let res = stream.read(buf);
 //          println!("read:{} - sz:{}", res, res.clone().unwrap());
+    
             if res.is_ok() {
             
                 for x in range(0, res.unwrap()) {
@@ -41,17 +42,22 @@ impl IChatListener for ChatListener {
                     }
                 }
                 
-                println!("{}",ss);
+                //println!("{}",ss);
                 let decoded: message::Message = serialize::json::decode(ss.as_slice()).unwrap();
                 match decoded
                 {
-                	message::Webcam(w) => println!("Message: {}", w.webcam_data.as_slice().from_base64()),
-                	_	=> ()
+                	message::SignIn(sign_in_msg) => println!("User {} signing in.", sign_in_msg.user_name.as_slice()),
+                    message::AddressRequest(ip_request_msg) => println!("IP address requested for user {}.", ip_request_msg.user_name.as_slice()),
+                    message::Webcam(w) => println!("Webcam Message: {}", w.webcam_data.as_slice().from_base64()),
+                	_ => println!("message not recognized: {}", ss),
                 }
                 ss = String::new();
                 
             }
-            else {
+            else {   // res is an error.
+                //if (res.Err.kind != std::io::EndOfFile) {
+                //    println!("error: {}", res);
+                //}
                 break;
             }
         }
