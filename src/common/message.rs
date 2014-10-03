@@ -100,7 +100,7 @@ pub enum Message
 
 impl Message
 {
-	pub fn convertToJSON(&self) -> String
+	pub fn convert_to_json(&self) -> String
 	{
 		json::encode(self)
 	}
@@ -138,17 +138,17 @@ impl Message
 //{
 //	print!("SignIn Sample Message:\n");
 //	let signInMessage = Message {messageType: signIn, messageData: SignIn(SignInMessage {user_name: "Test".to_string()})};
-//	print!("{}\n\n",signInMessage.convertToJSON());
+//	print!("{}\n\n",signInMessage.convert_to_json());
 //	print!("AddressRequest Sample Message:\n");
 //	let AddressRequestMessage = Message {messageType: addressRequest, messageData: AddressRequest(AddressRequestMessage {user_name: "Test".to_string()})};
-//	print!("{}\n\n",AddressRequestMessage.convertToJSON());
+//	print!("{}\n\n",AddressRequestMessage.convert_to_json());
 //	print!("ClientListRequest Sample Message:\n");
 //	print!("AddressResponse Sample Message:\n");
 //	let AddressResponseMessage = Message {messageType: addressResponse, messageData: AddressResponse(AddressResponseMessage {user_name: "Test".to_string(), ip_address: "127.0.0.1".to_string()})};
-//	print!("{}\n\n",AddressResponseMessage.convertToJSON());
+//	print!("{}\n\n",AddressResponseMessage.convert_to_json());
 //	print!("ClientListRequest Sample Message:\n");
 //	let clientListRequestMessage = Message {messageType: clientListRequest, messageData: ClientListRequest(ClientListRequestMessage)};
-//	print!("{}\n\n",clientListRequestMessage.convertToJSON());
+//	print!("{}\n\n",clientListRequestMessage.convert_to_json());
 //	print!("ClientListResponse Sample Message:\n");
 //	let mut clientListResponseMessage = Message {messageType: clientListResponse, messageData: ClientListResponse(ClientListResponseMessage {client_list: Vec::new()})};
 //	match clientListResponseMessage.messageData
@@ -171,5 +171,5 @@ impl Message
 //		},
 //		_	=> {}
 //	} 
-//	print!("{}\n\n",clientListResponseMessage.convertToJSON());
+//	print!("{}\n\n",clientListResponseMessage.convert_to_json());
 //}
