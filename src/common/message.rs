@@ -13,7 +13,7 @@ mod common {pub mod client_information;}
 #[deriving(Encodable, Decodable)]
 pub enum MessageType {
     signIn,		        //client logs into server, provides username
-    addressRequest ,    //client requests IP address of specified client
+    addressRequest,     //client requests IP address of specified client
     addressResponse,    //server sends IP address of specified client 
     clientListRequest,  //client requests list of active clients
     clientListResponse, //server response to clientListRequest
@@ -30,7 +30,7 @@ pub struct SignInMessage
 #[deriving(Encodable, Decodable)]
 pub struct AddressRequestMessage
 {
-	pub user_name:String
+	pub user_name: String
 }
 
 #[deriving(Encodable, Decodable)]
@@ -78,11 +78,11 @@ impl<E, S: Encoder<E>> Encodable<S, E> for MessageData
 	{
 		match (*self)
 		{
-			SignIn(ref temp_signIn) => temp_signIn.encode(s),
-			AddressRequest(ref temp_addressRequest) => temp_addressRequest.encode(s),
-			AddressResponse(ref temp_addressResponse) => temp_addressResponse.encode(s),
-			ClientListRequest(ref temp_clientListRequest) => temp_clientListRequest.encode(s),
-			ClientListResponse(ref temp_clientListResponse) => temp_clientListResponse.encode(s), 
+			SignIn(ref temp_sign_in) => temp_sign_in.encode(s),
+			AddressRequest(ref temp_address_request) => temp_address_request.encode(s),
+			AddressResponse(ref temp_address_response) => temp_address_response.encode(s),
+			ClientListRequest(ref temp_clien_list_request) => temp_clien_list_request.encode(s),
+			ClientListResponse(ref temp_client_list_response) => temp_client_list_response.encode(s), 
 			Webcam(ref w) => w.encode(s),
 			Text(ref t) => t.encode(s)
 		}

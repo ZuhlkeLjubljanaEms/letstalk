@@ -31,7 +31,6 @@ fn main() {
     }
     let addr = args[1].as_slice();
 	
-	
 	// Open socket to the server.
     let mut socket = TcpStream::connect(addr, 7777).unwrap();
 	
@@ -51,11 +50,14 @@ fn main() {
     // send my nickname to the server
     let temp_user_info = stored_user_info.pop();
     if temp_user_info.is_some() {
-        let register_msg = message::Message{message_type: message::signIn, message_data: message::SignIn(message::SignInMessage{user_name: temp_user_info.unwrap().friend_nickname})};
+        let register_msg = message::Message {
+                message_type: message::signIn, 
+                message_data: message::SignIn(message::SignInMessage {
+                        user_name: temp_user_info.unwrap().friend_nickname})
+                };
         // send the message to the server
-        socket.write(register_msg.convert_to_json().into_bytes().as_slice());
+        let _ = socket.write(register_msg.convert_to_json().into_bytes().as_slice());
     }
-    
 	
     // read the stored friends list to know which friends to request from the server.
     let result = file_io::read_friends_from_file(FRIEND_LIST_FILENAME);
@@ -67,9 +69,19 @@ fn main() {
         }
     };
     
+    // send list of friends to the server to request their IP addresses.
     for n in range(0u, stored_friend_info.len()) {
         println!("Friend list contains: {}", stored_friend_info.get(n).friend_nickname);
+        let temp_friend_info = stored_user_info.pop();
+        if temp_friend_info.is_some() {
+	        let address_request_msg = message::Message {
+	                   message_type: message::addressRequest, 
+	                   message_data: message::AddressRequest(message::AddressRequestMessage {
+	                           user_name: temp_friend_info.unwrap().friend_nickname})
+	                   };
+	        // send the message to the server
+	        let _ = socket.write(address_request_msg.convert_to_json().into_bytes().as_slice());
+	    }
     }
-    // now send a request to the server to get their IP addresses.
 	
 }
