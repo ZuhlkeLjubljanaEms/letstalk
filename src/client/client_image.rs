@@ -39,12 +39,21 @@ fn main() {
         
         opencv::show_image(window_name, camera_image.get_image());
         
-        let key = opencv::wait_key(2000);
+        let key = opencv::wait_key(1000);
         if key > -1 {
             println!("Key {}", key);
             break;
         }
 	    
+	    let size: u32 = encoded_image.len() as u32;
+	    let mut size_chunks: [u8, ..4] = [0, ..4];
+	    size_chunks[0] = size as u8;
+	    size_chunks[1] = (size / 0x100) as u8;
+	    size_chunks[2] = (size / 0x10000) as u8;
+        size_chunks[3] = (size / 0x1000000) as u8;
+	    
+	    //println!("------> SIZE: {} {} {} {}", size_chunks[0], size_chunks[1], size_chunks[2], size_chunks[3]);
+	    socket.write(size_chunks);
 		socket.write(encoded_image.as_slice());
 	}
 	
