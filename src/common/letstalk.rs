@@ -14,12 +14,10 @@ extern crate serialize;             // TODO: why is this required here?  Used in
 use common::message;
 use std::io::TcpStream;
 use std::os;
+pub mod file_io;
+pub mod client_information;
 #[path = "../common"]
-mod common {
-	pub mod client_information;
-	pub mod file_io;
-	pub mod message;
-}
+mod common {pub mod message;}
 
 static USER_INFO_FILENAME: &'static str = "userInfo.json";
 static FRIEND_LIST_FILENAME: &'static str = "friendList.json";
@@ -60,7 +58,7 @@ fn main() {
 	
     // read the stored friends list to know which friends to request from the server.
     let result = file_io::read_friends_from_file(FRIEND_LIST_FILENAME);
-    let stored_friend_info = match result {
+    let mut stored_friend_info = match result {
         Ok(x)  => x, 
         Err(e) => {
 	        error!("read_friends_from_file() returned Err({}). What should we do?", e);
@@ -69,8 +67,8 @@ fn main() {
     };
 
     // spawn a thread to listen for server responses
-    let server_friend_info = Vector<AddressResponseMessage>;
-    handle_server_friend_info_responses(server_friend_info);
+    let mut server_friend_info: Vec<message::AddressResponseMessage> = Vec::new();
+//    handle_server_friend_info_responses(&server_friend_info);
 
     // send list of friends to the server to request their IP addresses.
     for n in range(0u, stored_friend_info.len()) {
@@ -86,5 +84,7 @@ fn main() {
 		    }
 	    }
     }
-	
 }
+
+//fn handle_server_friend_info_responses(server_friend_info: &Vec) {
+//}
