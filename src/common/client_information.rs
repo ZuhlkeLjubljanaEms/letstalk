@@ -3,8 +3,10 @@ extern crate serialize;
 #[test] use serialize::json;
 use serialize::Encoder;
 use serialize::Encodable;
+use serialize::Decoder;
+use serialize::Decodable;
 
-#[deriving(Encodable)]
+#[deriving(Encodable, Decodable)]
 pub enum ClientInformationStatus
 {
 	Online,
@@ -38,7 +40,7 @@ impl EncodableTime
 	}
 }
 
-#[deriving(Encodable)]
+#[deriving(Encodable,Decodable)]
 pub struct ClientInformation
 {
 	pub user_name: String,
@@ -53,6 +55,15 @@ impl<E, S: Encoder<E>> Encodable<S, E> for EncodableTime
 	{
 		s.emit_i64(self.encodable_time.to_timespec().sec)
 	}
+}
+
+
+impl<E, D: Decoder<E>> Decodable<D, E> for EncodableTime
+{
+    fn decode(d: &mut D) -> Result<EncodableTime, E>
+    {
+    	Ok(EncodableTime::zero())
+    }
 }
 
 

@@ -35,8 +35,8 @@ fn main() {
 	    //}
 	    
 		//socket.write(ssl.into_bytes().as_slice());
-		let webcam_message = common::message::Message {message_type: common::message::webcam, message_data: common::message::Webcam(common::message::WebcamMessage {webcam_data: "123".to_string().into_bytes().as_slice().to_base64(serialize::base64::MIME)})};
-		socket.write(webcam_message.convert_to_json().into_bytes().as_slice());
+		let webcam_message = common::message::Webcam(common::message::WebcamMessage {webcam_data: "123".to_string().into_bytes().as_slice().to_base64(serialize::base64::MIME)});
+		socket.write(webcam_message.convertToJSON().into_bytes().as_slice());
 //	match client_listResponseMessage.messageData
 	//}
 	
