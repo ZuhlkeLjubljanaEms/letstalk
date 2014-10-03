@@ -29,64 +29,44 @@ impl IChatListener for ChatListener {
         
         let mut buf: [u8,..1000000]=[0,..1000000];
         
-
-        
-    
-    
         let mut image = opencv::Image::new(opencv::load_image("ZuhlkeLogo.gif", opencv::CV_LOAD_IMAGE_UNCHANGED));
     
-    	let mut buf_vec: Vec<u8> = Vec::new();
     	let res = stream.read(buf);
-    	let ss = res.unwrap();
-    	buf_vec.push_all(buf.slice(0, ss));
+    	let mut buf_index = 0;
+    	let mut buf_size = res.unwrap();
+    	
         loop {
-        	while (buf_vec.len() < 4)
-        	{
-        		let res = stream.read(buf);
-        		let ss = res.unwrap();
-        		buf_vec.push_all(buf.slice(0, ss));
-        	}
-        		
             	let mut size: u32 = 0;
-        		size+=buf_vec[0] as u32;
-        		size+=buf_vec[1] as u32 *0x100;
-        		size+=buf_vec[2] as u32 *0x10000;
-        		size+=buf_vec[3] as u32 *0x1000000;
+        		size+=buf[buf_index+0] as u32;
+        		size+=buf[buf_index+1] as u32 *0x100;
+        		size+=buf[buf_index+2] as u32 *0x10000;
+        		size+=buf[buf_index+3] as u32 *0x1000000;
+        		buf_index += 4;
         		
         		println!("{}",size);
-            	
-             	
-        
-             	
-        		while (buf_vec.len() < (size as uint))
-        		{
-        			let res = stream.read(buf);
-        			let ss = res.unwrap();
-        			buf_vec.push_all(buf.slice(0, ss));
-        		}   
+                 	
+                let mut image_vector = Vec::with_capacity(size as uint);
+                
+        		while (buf_index + size as uint >= buf_size) {
         		
-        		let mut image_vector = buf_vec.slice_mut(4, size as uint + 4 ).to_vec();
+        		  image_vector.push_all(buf.slice_mut(buf_index, buf_size));
+        		  size -= (buf_size-buf_index) as u32;
+        		  let res = stream.read(buf);
+        		  buf_size = res.unwrap();
+        		  buf_index = 0; 
+        		}
         		
-        		let length=buf_vec.len();
-        		if (size as uint != length)
-        		{
-        			println!("Before Slice");
-        			buf_vec = buf_vec.slice_mut(size as uint + 4 ,length).to_vec();
-        		}
-        		else
-        		{
-        			buf_vec.clear();
-        		}
-        			
-            
-               		image.decode_image(&mut image_vector);
+        		image_vector.push_all(buf.slice_mut(buf_index, size as uint));
+        		buf_index += size as uint;
+        		
+                image.decode_image(&mut image_vector);
         
-            	   opencv::show_image(window_name, image.get_image());
-            	   let key = opencv::wait_key(20);
-			        if key > -1 {
-			            println!("Key {}", key);
-			            break;
-			        }
+            	opencv::show_image(window_name, image.get_image());
+            	let key = opencv::wait_key(20);
+			    if key > -1 {
+			        println!("Key {}", key);
+			        break;
+			    }
         }
         println!("... disconnect");
       //  })
