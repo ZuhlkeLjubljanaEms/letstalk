@@ -39,7 +39,7 @@ fn main() {
         
         opencv::show_image(window_name, camera_image.get_image());
         
-        let key = opencv::wait_key(1000);
+        let key = opencv::wait_key(40);
         if key > -1 {
             println!("Key {}", key);
             break;
