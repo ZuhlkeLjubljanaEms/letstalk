@@ -6,7 +6,7 @@ use std::os;
 use common::message;
 //use std::io;
 
-#[path = "..\\common"]
+#[path = "../common"]
 mod common {pub mod message;}
 
 fn main() {

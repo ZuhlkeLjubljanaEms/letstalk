@@ -8,7 +8,7 @@ use serialize::Encodable;
 use serialize::Decoder;
 use serialize::Decodable;
 
-#[path = "..\\common"]
+#[path = "../common"]
 mod common {pub mod client_information;}
 
 

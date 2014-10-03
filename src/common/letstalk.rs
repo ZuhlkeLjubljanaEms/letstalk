@@ -16,7 +16,7 @@ use std::io::TcpStream;
 use std::os;
 pub mod file_io;
 pub mod client_information;
-#[path = "..\\common"]
+#[path = "../common"]
 mod common {pub mod message;}
 
 static USER_INFO_FILENAME: &'static str = "userInfo.json";
