@@ -54,13 +54,13 @@ extern {
     fn cvDecodeImage(buf: *const CvMat, iscolor: int) -> *mut IplImage;
     
     //void cvGetRawData(const CvArr* arr, uchar** data, int* step=NULL, CvSize* roi_size=NULL )
-    fn cvGetRawData(arr: *const IplImage, data: *mut*const i8, step: *mut int, roi_size: *mut CvSize );
+    fn cvGetRawData(arr: *const IplImage, data: *mut*const u8, step: *mut int, roi_size: *mut CvSize );
 
     //CvMat* cvCreateMatHeader(int rows, int cols, int type)
     fn cvCreateMatHeader(rows: int, cols: int, datatype: int) -> *mut CvMat; 
     
     //void cvSetData(CvArr* arr, void* data, int step)
-    fn cvSetData(arr: *mut CvMat, data: *mut i8, step: int);
+    fn cvSetData(arr: *mut CvMat, data: *mut u8, step: int);
 }
 
 // Adaptor functions
@@ -118,9 +118,9 @@ impl Image {
         self.image as *const IplImage
     }
     
-    pub fn encoded_image(&self) -> Vec<i8> {
+    pub fn encoded_image(&self) -> Vec<u8> {
         let p: *const int = ptr::null();
-        let mut data: *const i8 = std::ptr::null();
+        let mut data: *const u8 = std::ptr::null();
         let mut step = 0;
         let mut roi_size = CvSize{width: 0, height: 0};
         
@@ -136,7 +136,7 @@ impl Image {
         unsafe { std::vec::raw::from_buf(data, size) }
     }
     
-    pub fn decode_image(&mut self, encoded: &mut Vec<i8> ) {
+    pub fn decode_image(&mut self, encoded: &mut Vec<u8> ) {
     
         println!("--->decode vec length: {}", encoded.len());
         unsafe { 
