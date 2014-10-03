@@ -31,11 +31,12 @@ impl IChatListener for ChatListener {
         
         let mut image = opencv::Image::new(opencv::load_image("ZuhlkeLogo.gif", opencv::CV_LOAD_IMAGE_UNCHANGED));
     
-    	let res = stream.read(buf);
+    	let mut res = stream.read(buf);
     	let mut buf_index = 0;
     	let mut buf_size = res.unwrap();
     	
         loop {
+                
             	let mut size: u32 = 0;
         		size+=buf[buf_index+0] as u32;
         		size+=buf[buf_index+1] as u32 *0x100;
@@ -44,19 +45,35 @@ impl IChatListener for ChatListener {
         		buf_index += 4;
         		
         		println!("{}",size);
+        		println!("buf: {}",buf_size);
+        		
+        		if buf_index >= buf_size {
+        		  res = stream.read(buf);
+                  buf_size = res.unwrap();
+                  buf_index = 0;
+                  //println!("buf: {}",buf_size);
+        		}
+        		
                  	
                 let mut image_vector = Vec::with_capacity(size as uint);
                 
         		while (buf_index + size as uint >= buf_size) {
-        		
+        		if buf_index >= buf_size {
+                  res = stream.read(buf);
+                  buf_size = res.unwrap();
+                  buf_index = 0;
+                  //println!("buf: {}",buf_size);
+                }
         		  image_vector.push_all(buf.slice_mut(buf_index, buf_size));
         		  size -= (buf_size-buf_index) as u32;
-        		  let res = stream.read(buf);
+        		  res = stream.read(buf);
         		  buf_size = res.unwrap();
+        		  //println!("buf: {}",buf_size);
+        		  
         		  buf_index = 0; 
         		}
         		
-        		image_vector.push_all(buf.slice_mut(buf_index, size as uint));
+        		image_vector.push_all(buf.slice_mut(buf_index, buf_index+size as uint));
         		buf_index += size as uint;
         		
                 image.decode_image(&mut image_vector);
