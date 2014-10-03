@@ -52,11 +52,8 @@ fn main() {
     // send my nickname to the server
     let temp_user_info = stored_user_info.pop();
     if temp_user_info.is_some() {
-        let register_msg = message::Message {
-                message_type: message::signIn, 
-                message_data: message::SignIn(message::SignInMessage {
-                        user_name: temp_user_info.unwrap().friend_nickname})
-                };
+        let register_msg = message::SignIn(message::SignInMessage {
+                        user_name: temp_user_info.unwrap().friend_nickname});
         // send the message to the server
         let _ = socket.write(register_msg.convert_to_json().into_bytes().as_slice());
     }
@@ -80,11 +77,8 @@ fn main() {
         println!("Friend list contains: {}", stored_friend_info.get(n).friend_nickname);
         let temp_friend_info = stored_friend_info.pop();
         if temp_friend_info.is_some() {
-	        let address_request_msg = message::Message {
-	                   message_type: message::addressRequest, 
-	                   message_data: message::AddressRequest(message::AddressRequestMessage {
-	                           user_name: temp_friend_info.unwrap().friend_nickname})
-	                   };
+	        let address_request_msg = message::AddressRequest(message::AddressRequestMessage {
+	                           user_name: temp_friend_info.unwrap().friend_nickname});
 	        // send the message to the server
 	        match socket.write(address_request_msg.convert_to_json().into_bytes().as_slice()) {
                 Err(e) => error!("couldn't send friend info to server: {}", e),
